@@ -21,8 +21,8 @@ TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := kryo
-TARGET_CPU_VARIANT_RUNTIME := kryo585
+TARGET_CPU_VARIANT := generic
+TARGET_CPU_VARIANT_RUNTIME := kryo300
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := $(TARGET_ARCH_VARIANT)
@@ -35,20 +35,18 @@ ENABLE_CPUSETS := true
 ENABLE_SCHEDBOOST := true
 
 # Bootloader
-PRODUCT_PLATFORM := kona
+PRODUCT_PLATFORM := lahaina
 TARGET_BOOTLOADER_BOARD_NAME := $(PRODUCT_RELEASE_NAME)
 TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
 
 # Platform
-TARGET_BOARD_PLATFORM := xiaomi_sm8250
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno650
-QCOM_BOARD_PLATFORMS += xiaomi_sm8250
+TARGET_BOARD_PLATFORM := lahaina
 
 # Kernel
-VENDOR_CMDLINE := "console=ttyMSM0,115200n8 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=2048 loop.max_part=7 cgroup.memory=nokmem,nosocket reboot=panic_warm buildvariant=user androidboot.init_fatal_reboot_target=recovery androidboot.selinux=permissive"
+VENDOR_CMDLINE := "console=ttyMSM0,115200n8 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=0 loop.max_part=7 cgroup.memory=nokmem,nosocket pcie_ports=compat loop.max_part=7 iptable_raw.raw_before_defrag=1 ip6table_raw.raw_before_defrag=1 buildvariant=user"
 BOARD_KERNEL_PAGESIZE := 4096
-BOARD_KERNEL_BASE          := 0x00000000
+BOARD_KERNEL_BASE := 0x00000000
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
@@ -166,6 +164,7 @@ TW_INCLUDE_NTFS_3G := true
 TW_USE_TOOLBOX := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
+TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/virtual/thermal/thermal_zone39/temp"
 TW_MAX_BRIGHTNESS := 2047
 ifeq ($(TW_DEFAULT_LANGUAGE),)
 TW_DEFAULT_LANGUAGE := zh_CN
@@ -177,7 +176,12 @@ TW_NO_SCREEN_BLANK := true
 TW_EXCLUDE_APEX := true
 TW_HAS_EDL_MODE := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS :=true
+TW_SUPPORT_INPUT_AIDL_HAPTICS_FQNAME := "IVibrator/vibratorfeature"
 TW_LOAD_VENDOR_MODULES := "exfat.ko"
 TW_BACKUP_EXCLUSIONS := /data/fonts
 TW_FRAMERATE := 60
+TW_Y_OFFSET := 89
+TW_H_OFFSET := -89
 
+# Kernel module loading
+TW_LOAD_VENDOR_MODULES := $(shell echo \"$(shell ls $(DEVICE_PATH)/prebuilt/modules)\")
